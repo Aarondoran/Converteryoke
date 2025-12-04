@@ -1,0 +1,99 @@
+<!-- START FILE: index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Offline Site Builder — Mini IDE</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app" class="app">
+    <header class="topbar">
+      <div class="brand">Offline Builder — Mini IDE</div>
+      <div class="controls">
+        <button id="new-project" class="btn">New</button>
+        <select id="project-select" class="project-select" aria-label="Select project"></select>
+        <button id="import-folder" class="btn">Import Folder</button>
+        <input id="folder-input" type="file" webkitdirectory directory multiple style="display:none" />
+        <button id="download-zip" class="btn">Download ZIP</button>
+        <button id="download-html" class="btn">Download HTML</button>
+        <button id="generate-link" class="btn">Generate Link</button>
+
+        <!-- NEW: Project delete button -->
+        <button id="delete-project" class="btn" title="Delete current project">Delete Project</button>
+
+        <label class="small-toggle">Live <input id="live-toggle" type="checkbox"></label>
+        <label class="small-toggle">Auto-insert <input id="auto-insert" type="checkbox" checked></label>
+      </div>
+    </header>
+
+    <main class="main">
+      <aside class="leftpane">
+        <div class="panel">
+          <div class="panel-title">Files</div>
+          <div class="file-actions">
+            <button id="add-file" class="btn small">Add File</button>
+            <button id="add-folder" class="btn small">Add Folder</button>
+            <button id="delete-file" class="btn small">Delete</button>
+          </div>
+
+          <!-- NEW: Hidden file inputs for picking real files -->
+          <input id="add-file-input" type="file" multiple style="display:none" />
+          <input id="insert-file-input" type="file" multiple style="display:none" />
+
+          <div id="file-tree" class="file-tree" role="tree"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Library</div>
+          <div id="library-list" class="library-list"></div>
+          <div class="panel-actions">
+            <button id="add-lib" class="btn small">Add</button>
+            <button id="del-lib" class="btn small">Delete</button>
+          </div>
+        </div>
+
+        <div class="panel small">
+          <div class="panel-title">Errors</div>
+          <pre id="error-box" class="error-box" aria-live="polite"></pre>
+        </div>
+      </aside>
+
+      <section class="centerpane">
+        <div class="editor-toolbar">
+          <button id="toggle-editor" class="btn small">Toggle Editor</button>
+          <button id="toggle-preview" class="btn small">Toggle Preview</button>
+          <button id="preview-current" class="btn small">Preview Current</button>
+          <button id="copy-html" class="btn small">Copy</button>
+          <button id="insert-file" class="btn small">Insert File</button>
+        </div>
+
+        <div class="split" id="split">
+          <div class="pane editor-pane" id="editor-pane">
+            <textarea id="editor" spellcheck="false" placeholder="Select a file to edit or create a new one."></textarea>
+          </div>
+
+          <div class="resizer" id="resizer" title="Drag to resize"></div>
+
+          <div class="pane preview-pane" id="preview-pane">
+            <iframe id="preview" title="Preview" sandbox="allow-scripts allow-same-origin"></iframe>
+          </div>
+        </div>
+
+        <div class="bottom-actions">
+          <label>Output (Data URL / Link)</label>
+          <textarea id="output" readonly placeholder="Generated data URL or link will appear here"></textarea>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <small>Minimal • Offline • ZIP export • Folder import • Library • Live preview</small>
+    </footer>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
+<!-- END FILE: index.html -->
