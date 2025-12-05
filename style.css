@@ -1,0 +1,240 @@
+/* ===========================
+   Koder Offline Builder — CSS
+   =========================== */
+
+/* Color tokens (light by default) */
+:root{
+  --bg: #f4f7fb;
+  --card: #ffffff;
+  --panel-border: rgba(2,6,23,0.06);
+  --accent: #2563eb;
+  --muted: #6b7280;
+  --text: #071029;
+  --glass: rgba(255,255,255,0.6);
+  --success: #10b981;
+  --danger: #ef4444;
+  --shadow: 0 6px 20px rgba(2,6,23,0.06);
+  --radius: 12px;
+}
+
+/* Dark theme */
+[data-theme="dark"]{
+  --bg: #071027;
+  --card: #071a2b;
+  --panel-border: rgba(255,255,255,0.04);
+  --accent: #60a5fa;
+  --muted: #9fb0c7;
+  --text: #e6f0fb;
+  --glass: rgba(255,255,255,0.03);
+  --shadow: 0 8px 30px rgba(0,0,0,0.6);
+}
+
+/* Global layout */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background:linear-gradient(180deg,var(--bg),#e9eef8 60%);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1.4;
+}
+
+/* Header */
+header#appHeader{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding:14px 18px;
+  border-bottom:1px solid var(--panel-border);
+  background:linear-gradient(90deg, rgba(255,255,255,0.6), transparent);
+}
+.brand h1{margin:0;font-size:18px;letter-spacing:-0.2px}
+.brand .sub{font-size:13px;color:var(--muted);margin-top:2px}
+
+/* Buttons */
+.btn{
+  background:var(--accent);
+  color:white;
+  border:0;
+  padding:8px 12px;
+  border-radius:10px;
+  cursor:pointer;
+  box-shadow:var(--shadow);
+  font-weight:600;
+  font-size:13px;
+}
+.btn.ghost{
+  background:transparent;
+  color:var(--text);
+  border:1px solid var(--panel-border);
+  box-shadow:none;
+}
+.btn.small{padding:6px 8px;font-size:13px;border-radius:9px}
+.btn:active{transform:translateY(1px)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+
+/* Main layout */
+main#layout{
+  display:grid;
+  grid-template-columns:340px 1fr;
+  gap:14px;
+  max-width:1200px;
+  margin:18px auto;
+  padding:0 14px 32px;
+  align-items:start;
+}
+
+/* Panels / sidebar / main */
+aside#sidebar, section#main{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px}
+.panel{background:transparent;padding:0;border-radius:8px}
+
+/* Panel header */
+.panelHeader{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.panelHeader strong{font-size:14px}
+.muted{color:var(--muted);font-size:13px}
+
+/* Files list */
+.filesList{display:flex;flex-direction:column;gap:8px;max-height:36vh;overflow:auto;padding-right:6px}
+.fileItem, .file-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px;
+  border-radius:10px;
+  background:linear-gradient(180deg, rgba(0,0,0,0.01), transparent);
+  border:1px solid var(--panel-border);
+}
+.fileMeta{display:flex;flex-direction:column}
+.fileName{font-weight:600}
+.fileType{font-size:12px;color:var(--muted)}
+
+/* Controls and options */
+.optionRow, .panelRow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.optionRow label{font-size:13px;color:var(--muted)}
+
+/* Textareas / editor / preview */
+textarea, input[type="text"], select{
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  font-size:14px;
+  color:var(--text);
+  border-radius:10px;
+  border:1px solid var(--panel-border);
+  background:transparent;
+  padding:10px;
+  resize:vertical;
+}
+textarea[readonly]{opacity:0.95}
+.editorTextarea{
+  height:42vh;
+  width:100%;
+  line-height:1.45;
+  font-family:Menlo, Monaco, monospace;
+  font-size:13px;
+  white-space:pre;
+  overflow:auto;
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+}
+.previewFrame{
+  width:100%;
+  height:46vh;
+  border-radius:10px;
+  border:1px solid var(--panel-border);
+  background:white;
+  overflow:hidden;
+}
+
+/* Editor header area */
+.editorHeader{display:flex;align-items:center;gap:10px}
+.editorBody{display:flex;gap:12px}
+
+/* Toolbar & small controls */
+.toolbar{display:flex;gap:8px;align-items:center}
+.small{font-size:13px;padding:6px}
+
+/* Validator console */
+#consoleOutput{height:120px;overflow:auto}
+
+/* Modals */
+.modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(2,6,23,0.45);
+  z-index:9999;
+}
+.modal[aria-hidden="false"]{display:flex}
+.modalContent{
+  width:92%;
+  max-width:720px;
+  background:var(--card);
+  padding:16px;
+  border-radius:12px;
+  box-shadow:var(--shadow);
+}
+
+/* Buttons inside modal */
+.modalContent button{margin-left:6px}
+
+/* Template helpers */
+.fileActions{display:flex;gap:6px;align-items:center}
+
+/* Status & badges */
+.status{font-size:13px;color:var(--muted)}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:var(--glass);font-size:12px;color:var(--muted)}
+
+/* Small utility */
+.row{display:flex;gap:8px;align-items:center}
+.col{display:flex;flex-direction:column;gap:8px}
+
+/* Responsive */
+@media (max-width:980px){
+  main#layout{grid-template-columns:1fr; padding:10px}
+  .previewFrame{height:34vh}
+  .editorTextarea{height:28vh}
+  header#appHeader{flex-direction:column;align-items:flex-start;gap:6px}
+}
+
+/* Loading / spinner */
+.loader{
+  display:inline-block;
+  width:18px;height:18px;
+  border-radius:50%;
+  border:3px solid rgba(0,0,0,0.08);
+  border-top-color:var(--accent);
+  animation:spin 1s linear infinite;
+  vertical-align:middle;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Tiny utilities */
+.hidden{display:none}
+.kv{font-size:13px;color:var(--muted)}
+.note{font-size:13px;color:var(--muted);margin-top:6px}
+
+/* Focus states for accessibility */
+button:focus, textarea:focus, input:focus, select:focus{
+  outline:3px solid rgba(37,99,235,0.14);
+  outline-offset:2px;
+}
+
+/* Prevent long data URL wrapping in some displays */
+#outputArea, textarea[readonly]{
+  word-break:break-all;
+  white-space:pre-wrap;
+}
+
+/* QR canvas sizing fallback */
+#qrCanvas{width:100%;height:auto;max-width:360px;border-radius:8px}
+
+/* Small tweaks to match HTML elements */
+.panel.small{padding:12px;font-size:13px}
+.filesList::-webkit-scrollbar{height:8px;width:8px}
+.filesList::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.08);border-radius:8px}
+
+/* Give file actions compact look */
+.fileActions button{padding:6px 8px;border-radius:8px}

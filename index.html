@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Koder Offline Builder — Full</title>
+
+  <!-- LINK TO CSS (will create next) -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="appHeader">
+    <div class="brand">
+      <h1>Koder Offline Builder</h1>
+      <div class="sub">Create a single-file offline site (data: URL or .html)</div>
+    </div>
+
+    <div class="actions">
+      <button id="themeToggle" class="btn">Toggle Theme</button>
+      <button id="openProjectExplorer" class="btn ghost">Projects</button>
+    </div>
+  </header>
+
+  <!-- LAYOUT: Sidebar (left) + Main (right) -->
+  <main id="layout">
+    <!-- SIDEBAR -->
+    <aside id="sidebar">
+
+      <section class="panel">
+        <div class="panelHeader">
+          <strong>Project</strong>
+          <div id="projectName" class="muted">(untitled)</div>
+        </div>
+
+        <div class="panelRow">
+          <button id="saveProjectBtn" class="btn">Save</button>
+          <button id="openProjectBtn" class="btn ghost">Open</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panelHeader"><strong>Files</strong><div class="muted">Add, edit, remove</div></div>
+
+        <div class="panelRow">
+          <button id="addFileBtn" class="btn">+ Add File</button>
+          <button id="newFileBtn" class="btn ghost">+ New</button>
+        </div>
+
+        <!-- hidden system file input for import -->
+        <input id="hiddenFileInput" type="file" multiple style="display:none" />
+
+        <!-- file list -->
+        <div id="filesList" class="filesList" role="list" aria-live="polite"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panelHeader"><strong>Library</strong><div class="muted">Reusable files</div></div>
+        <div class="panelRow">
+          <button id="openLibraryBtn" class="btn ghost">Library</button>
+          <button id="addToLibraryBtn" class="btn ghost">Save Selected</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panelHeader"><strong>Export</strong><div class="muted">Choose output</div></div>
+
+        <div class="optionRow">
+          <label><input id="optMinify" type="checkbox"> Minify</label>
+          <label><input id="optGzip" type="checkbox"> GZIP</label>
+          <label><input id="optMobile" type="checkbox"> Mobile meta</label>
+          <label><input id="optPreview" type="checkbox" checked> Live preview</label>
+        </div>
+
+        <div class="panelRow">
+          <button id="generateBtn" class="btn">Generate Data URL</button>
+          <button id="downloadBtn" class="btn ghost">Download .html</button>
+          <button id="copyBtn" class="btn ghost">Copy Link</button>
+        </div>
+
+        <div class="panelRow" style="margin-top:8px">
+          <button id="qrBtn" class="btn ghost">QR</button>
+          <button id="shortenBtn" class="btn ghost">Shorten (local)</button>
+        </div>
+
+        <div class="muted" style="margin-top:8px">Output</div>
+        <textarea id="outputArea" readonly placeholder="Generated data URL or short link will appear here"></textarea>
+      </section>
+
+      <section class="panel small">
+        <div class="muted">Status</div>
+        <div id="statusText" class="status">Idle</div>
+      </section>
+
+    </aside>
+
+    <!-- MAIN AREA -->
+    <section id="main">
+
+      <!-- Top controls -->
+      <div id="mainControls" class="panel">
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button id="previewToggle" class="btn small ghost">Toggle Preview</button>
+          <button id="injectFrameworkBtn" class="btn small ghost">Inject Framework</button>
+          <select id="frameworkSelect" class="small">
+            <option value="">— Choose Framework —</option>
+            <option value="jquery">jQuery (min)</option>
+            <option value="phaser">Phaser (min)</option>
+            <option value="p5">p5.js (min)</option>
+          </select>
+          <div style="flex:1"></div>
+          <div class="muted" id="projectUpdated">Last saved: —</div>
+        </div>
+      </div>
+
+      <!-- Editor and preview split -->
+      <div id="editorWrap" class="panel">
+        <div class="editorHeader" style="display:flex;align-items:center;gap:8px;">
+          <div>
+            <strong id="currentFileName">No file selected</strong>
+            <div class="muted" id="currentFileMeta">—</div>
+          </div>
+
+          <div style="flex:1"></div>
+
+          <select id="editorMode" class="small">
+            <option value="auto">Auto</option>
+            <option value="html">HTML</option>
+            <option value="css">CSS</option>
+            <option value="js">JavaScript</option>
+            <option value="text">Plain</option>
+          </select>
+
+          <button id="saveFileBtn" class="btn small ghost">Save</button>
+          <button id="deleteFileBtn" class="btn small ghost">Delete</button>
+        </div>
+
+        <div class="editorBody" style="display:flex;gap:12px;margin-top:8px;">
+          <!-- Code editor (we'll add syntax highlighting via CSS/JS) -->
+          <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+            <div class="toolbar">
+              <button id="formatBtn" class="btn small ghost">Format</button>
+              <button id="minifyBtn" class="btn small ghost">Minify</button>
+              <button id="insertFileBtn" class="btn small ghost">Insert File</button>
+            </div>
+            <textarea id="editor" class="editorTextarea" spellcheck="false" placeholder="Select a file to edit or add a new file..."></textarea>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div class="muted" id="editorInfo">—</div>
+              <div>
+                <button id="undoBtn" class="btn small ghost">Undo</button>
+                <button id="redoBtn" class="btn small ghost">Redo</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preview pane -->
+          <div style="width:48%;display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <strong>Preview</strong>
+              <div>
+                <button id="openPreviewWindow" class="btn small ghost">Open in New Tab</button>
+                <button id="reloadPreview" class="btn small ghost">Reload</button>
+              </div>
+            </div>
+            <iframe id="previewFrame" class="previewFrame" title="Live preview"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- Validator / Lint / Console -->
+      <div id="tools" class="panel" style="margin-top:12px;">
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button id="validateBtn" class="btn small ghost">Validate</button>
+          <button id="syntaxHighlightBtn" class="btn small ghost">Toggle Syntax Highlight</button>
+          <div style="flex:1"></div>
+          <button id="compressBtn" class="btn small ghost">Compress (GZIP)</button>
+          <div class="muted" id="toolStatus">—</div>
+        </div>
+
+        <div style="margin-top:8px">
+          <div class="muted">Console / Validator output</div>
+          <textarea id="consoleOutput" readonly placeholder="Validation messages, errors, and logs appear here"></textarea>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- QR modal -->
+  <div id="qrModal" class="modal" aria-hidden="true">
+    <div class="modalContent">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <strong>QR Code</strong>
+        <button id="closeQr" class="btn small ghost">Close</button>
+      </div>
+      <canvas id="qrCanvas" width="300" height="300" style="background:white;margin-top:8px;border-radius:8px;"></canvas>
+      <div style="margin-top:8px;display:flex;gap:8px">
+        <button id="downloadQrBtn" class="btn">Download PNG</button>
+        <button id="copyQrBtn" class="btn ghost">Copy Image</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project Explorer modal -->
+  <div id="projectExplorer" class="modal" aria-hidden="true">
+    <div class="modalContent">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <strong>Projects</strong>
+        <button id="closeProjects" class="btn small ghost">Close</button>
+      </div>
+      <div id="projectsList" style="margin-top:8px"></div>
+      <div style="margin-top:8px">
+        <button id="newProjectBtn" class="btn">New Project</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Offline library modal -->
+  <div id="libraryModal" class="modal" aria-hidden="true">
+    <div class="modalContent">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <strong>Library</strong>
+        <button id="closeLibrary" class="btn small ghost">Close</button>
+      </div>
+      <div id="libraryList" style="margin-top:8px"></div>
+    </div>
+  </div>
+
+  <!-- Hidden templates & prototypes -->
+  <template id="fileItemTemplate">
+    <div class="fileItem">
+      <div class="fileMeta"><div class="fileName"></div><div class="muted fileType"></div></div>
+      <div class="fileActions">
+        <button class="editBtn small ghost">Edit</button>
+        <button class="insertBtn small ghost">Insert</button>
+        <button class="delBtn small ghost">Delete</button>
+      </div>
+    </div>
+  </template>
+
+  <!-- Link to JS (will create after CSS) -->
+  <script src="script.js" defer></script>
+
+</body>
+</html>
